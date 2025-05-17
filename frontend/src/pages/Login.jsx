@@ -6,7 +6,7 @@ import { handleError, handleSuccess } from '../utils';
 function Login() {
   const [loginInfo, setLoginInfo] = useState({
     email: '',
-    password: '',
+    password: '' 
   })
 
  const navigate = useNavigate ();
@@ -26,7 +26,10 @@ function Login() {
         return handleError('Please fill in all fields') 
     }
     try {
-        const url = 'http://localhost:5000/auth/login';
+        // const url = 'http://localhost:5000/auth/login';
+        // const url = 'http://192.168.29.106:5000/auth/login'
+        const url = '/api/auth/login';
+        
         const response = await fetch(url, {
             method: 'POST',
             headers: {
