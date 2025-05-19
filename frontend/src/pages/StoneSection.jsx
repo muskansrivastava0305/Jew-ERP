@@ -1,8 +1,40 @@
 "use client"
+import { useState } from "react"
 
 const StoneSection = ({ stones, viewMode, onAddClick }) => {
+  const [activeStatus, setActiveStatus] = useState(() =>
+    stones.reduce((acc, stone) => {
+      acc[stone.id] = true // default all to active
+      return acc
+    }, {})
+  )
+  const [selectedId, setSelectedId] = useState(null)
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [nextStatus, setNextStatus] = useState(null)
+
+  const handleToggleClick = (id) => {
+    setSelectedId(id)
+    setNextStatus(!activeStatus[id])
+    setShowConfirm(true)
+  }
+
+  const handleConfirm = () => {
+    setActiveStatus((prev) => ({
+      ...prev,
+      [selectedId]: nextStatus,
+    }))
+    setShowConfirm(false)
+    setSelectedId(null)
+    setNextStatus(null)
+  }
+
+  const handleCancel = () => {
+    setShowConfirm(false)
+    setSelectedId(null)
+    setNextStatus(null)
+  }
+
   const handleEditDetails = (id) => {
-    // Implement edit functionality
     console.log(`Edit stone with id: ${id}`)
   }
 
@@ -21,18 +53,15 @@ const StoneSection = ({ stones, viewMode, onAddClick }) => {
                   <span className="text-sm">₹{stone.price.toFixed(2)}/ct</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center mr-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-3 w-3 text-white"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                      </svg>
-                    </div>
-                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer mr-1">
+                    <input
+                      type="checkbox"
+                      checked={activeStatus[stone.id]}
+                      onChange={() => handleToggleClick(stone.id)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#8BAD3F] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#8BAD3F]"></div>
+                  </label>
                   <button
                     className="px-3 py-1 bg-[#8BAD3F] text-white text-sm rounded-md hover:bg-[#7A9A35]"
                     onClick={() => handleEditDetails(stone.id)}
@@ -75,7 +104,16 @@ const StoneSection = ({ stones, viewMode, onAddClick }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{stone.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap">₹{stone.price.toFixed(2)}/ct</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={activeStatus[stone.id]}
+                        onChange={() => handleToggleClick(stone.id)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#8BAD3F] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#8BAD3F]"></div>
+                    </label>
                     <button
                       className="px-3 py-1 bg-[#8BAD3F] text-white text-sm rounded-md hover:bg-[#7A9A35]"
                       onClick={() => handleEditDetails(stone.id)}
@@ -90,6 +128,7 @@ const StoneSection = ({ stones, viewMode, onAddClick }) => {
         </div>
       )}
 
+      {/* Add new stone button */}
       <button
         className="fixed bottom-6 right-6 flex items-center justify-center px-4 py-2 bg-[#8BAD3F] text-white rounded-md shadow-lg hover:bg-[#7A9A35]"
         onClick={onAddClick}
@@ -103,6 +142,32 @@ const StoneSection = ({ stones, viewMode, onAddClick }) => {
         </svg>
         Add new stone
       </button>
+
+      {/* Confirmation Modal */}
+      {showConfirm && (
+        <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-md shadow-lg p-6 w-80 text-center">
+            <h3 className="text-lg font-semibold mb-3">
+              {nextStatus ? "Activate" : "Deactivate"} this stone?
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">Are you sure you want to {nextStatus ? "activate" : "deactivate"} this stone?</p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleConfirm}
+                className="bg-[#8BAD3F] text-white px-4 py-2 rounded-md hover:bg-[#7A9A35]"
+              >
+                OK
+              </button>
+              <button
+                onClick={handleCancel}
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

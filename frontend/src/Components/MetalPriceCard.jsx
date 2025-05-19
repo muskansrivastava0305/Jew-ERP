@@ -24,7 +24,7 @@ const MetalPriceCard = ({ metal }) => {
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
-      <div className="flex items-center p-4 border-b">
+      <div className="flex items-center p-3">
         <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center mr-3">
           <img
             src={metal.icon || `/metals/${metal.name.toLowerCase()}.png`}
@@ -49,8 +49,10 @@ const MetalPriceCard = ({ metal }) => {
           {metal.trend.toFixed(2)}% today
         </div>
 
-        <div className="mt-2 text-xs text-gray-500">Last update: {formatDate(metal.lastUpdated)}</div>
-
+<div className="flex gap-8 ">
+        <div className="mt-2 text-xs text-gray-500 ">Last update:</div>
+          <div className=" mt-2 text-xs text-gray-500"> {formatDate(metal.lastUpdated)}</div>
+</div>
         <button
           onClick={() => setShowEditModal(true)}
           className="mt-4 w-full py-2 bg-[#8AAE4A] text-white rounded-md hover:bg-green-600 transition-colors"

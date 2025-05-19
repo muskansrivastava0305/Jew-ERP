@@ -88,6 +88,7 @@ app.use('/auth', AuthRouter);
 app.use('/products', ProductRouter);
 app.use('/api', ApiRoutes); // Add your metals, sales, analytics APIs here
 
+
 // Simple test route
 app.get('/ping', (req, res) => {
   res.send('pong');
