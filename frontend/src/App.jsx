@@ -7,6 +7,9 @@ import CustomerDetails from './pages/CustomerDetails'
 import DashboardLayout from './pages/DashboardLayout'
 import PrivateRoute from './pages/PrivateRoute'
 import MetalManagement from './pages/MetalManagement'
+import CategoryManagement from './pages/CategoryManagement'
+import ProductManagement from './pages/ProductManagement'
+import './index.css'
 
 const App = () => {
   return (
@@ -27,6 +30,8 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/customer-management" element={<CustomerDetails />} />
         <Route path="/metal-management" element={<MetalManagement />} /> {/* <-- Fixed */}
+        <Route path="/category-management" element={<CategoryManagement />} />
+        <Route path="/Product-Management" element={<ProductManagement />} />
       </Route>
     </Routes>
   )

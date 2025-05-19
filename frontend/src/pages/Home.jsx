@@ -102,7 +102,9 @@ function Home() {
       </div>
 
 {/* Sales Graph */}
-<div className="bg-white p-4 rounded-lg shadow">
+<div className=" flex flex-row w-full gap-6">
+  <div className="flex flex-col w-[1020px] gap-6">
+<div className="bg-white p-4 rounded-lg shadow ">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Sales Graph</h2>
           <div className="flex space-x-2">
@@ -128,9 +130,7 @@ function Home() {
         </div>
         <SalesGraph data={salesData} period={graphPeriod} />
       </div>
-
-{/* Analytics */}
-<div className="bg-white p-4 rounded-lg shadow">
+      <div className="bg-white p-4 rounded-lg shadow">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">Analytics</h2>
             <div className="flex items-center space-x-2 bg-green-100 text-green-800 px-2 py-1 rounded-md text-xs">
@@ -143,7 +143,7 @@ function Home() {
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-4">
+          <div className="flex gap-4">
             <AnalyticsCard
               title="Sales made"
               value={analytics.salesMade?.value || 0}
@@ -164,11 +164,12 @@ function Home() {
             />
           </div>
         </div>
+      </div>
 
- {/* Recent Customers and Analytics */}
- <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div className="">
+       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Customers */}
-        <div className="lg:col-span-2 bg-white p-4 rounded-lg shadow">
+        <div className="lg:col-span-2 bg-white p-4 rounded-lg shadow w-[375px] ">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">Recent Customers</h2>
             <Link to="/customer-management" className="text-green-600 hover:text-green-800 text-sm">
@@ -176,6 +177,12 @@ function Home() {
             </Link>
           </div>
           <CustomerList customers={customers} />
+           <CustomerList customers={customers} />
+            <CustomerList customers={customers} />
+             <CustomerList customers={customers} />
+              <CustomerList customers={customers} />
+               <CustomerList customers={customers} />
+                <CustomerList customers={customers} />
         </div>
 
       {/* <h1>{loggedInUser}</h1>
@@ -183,6 +190,14 @@ function Home() {
 
       <ToastContainer />
     </div>
+    </div>
+      </div>
+
+{/* Analytics */}
+
+
+ {/* Recent Customers and Analytics */}
+
     </div>
   )
 }
