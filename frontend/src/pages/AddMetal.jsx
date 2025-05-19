@@ -1,6 +1,7 @@
 
 import { useState } from "react"
 import { createMetal } from "../api/metalApi"
+import {PlusCircle, X } from "lucide-react"
 
 const AddMetalModal = ({ onClose, onAddMetal }) => {
   const [formData, setFormData] = useState({
