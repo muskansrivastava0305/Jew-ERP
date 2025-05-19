@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { createStone } from "../api/stoneApi"
 
 const AddStoneModal = ({ onClose, onAddStone }) => {
   const [formData, setFormData] = useState({
@@ -43,8 +44,7 @@ const AddStoneModal = ({ onClose, onAddStone }) => {
 
     try {
       // In a real app, you would make an API call here
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+     
 
       // Create a new stone object
       const newStone = {
@@ -53,9 +53,14 @@ const AddStoneModal = ({ onClose, onAddStone }) => {
         image: previewUrl || "/placeholder.svg?height=150&width=150",
         description: formData.description,
       }
-
+      createStone(newStone).then((res)=>{
+        console.log(res,"Final data")
+        onAddStone(res)
+      }).catch((a)=>{
+        console.log(a)
+      })
       // Add the new stone
-      onAddStone(newStone)
+     
 
       // Close the modal
       onClose()

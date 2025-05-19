@@ -1,7 +1,6 @@
-"use client";
 
-import { useState } from "react";
-import { PlusCircle, X } from "lucide-react";
+import { useState } from "react"
+import { createMetal } from "../api/metalApi"
 
 const AddMetalModal = ({ onClose, onAddMetal }) => {
   const [formData, setFormData] = useState({
@@ -27,10 +26,28 @@ const AddMetalModal = ({ onClose, onAddMetal }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({ ...formData, image: file });
-      const reader = new FileReader();
-      reader.onloadend = () => setPreviewUrl(reader.result);
-      reader.readAsDataURL(file);
+
+      setFormData({
+        ...formData,
+        image: file,
+      })
+      //code that uploads image to backed cloudnary 
+      //it will retun url http://image.com
+      // Create preview URL
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        //put tthe url here as it will uplad image
+        //Step one first wirte a backend code to get image data and upload it in backend 
+        //for that creat a new route in api named like /upload image the will get the image
+        //then you need to creat a folder that will store the images uploaded 
+        //after which once the image is uplaoded you need to wirte coundnary code to upload that image to cloudanry
+        //after that it will reutrn a url so 
+        //now you need to send that url as res.send("url of image")
+        //now onece we get hte url you need to setPreviewUrl("url value")
+        setPreviewUrl(reader.result)
+      }
+      reader.readAsDataURL(file)
+
     }
   };
 
@@ -49,6 +66,12 @@ const AddMetalModal = ({ onClose, onAddMetal }) => {
     setIsLoading(true);
 
     try {
+
+   
+     
+
+      // Create a new metal object
+
       const newMetal = {
         name: formData.name,
         price: parseFloat(formData.price),
@@ -57,8 +80,12 @@ const AddMetalModal = ({ onClose, onAddMetal }) => {
         standardPurityPrice: formData.standardPurityPrice,
         image: previewUrl || "/placeholder.svg",
         description: formData.description,
-        variants,
-      };
+
+      }
+     
+       let finalArrayOfMetals =await createMetal(newMetal)
+      // Add the new metal
+      onAddMetal(newMetal)
 
       onAddMetal(newMetal);
       onClose();
@@ -68,6 +95,8 @@ const AddMetalModal = ({ onClose, onAddMetal }) => {
       setIsLoading(false);
     }
   };
+
+  // Harshit chauhan 
 
   return (
     <div className="fixed inset-0  bg-transparent backdrop-blur-sm bg-opacity-30 flex items-center justify-center z-50">
