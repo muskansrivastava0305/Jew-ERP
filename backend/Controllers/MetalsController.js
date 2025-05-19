@@ -1,17 +1,19 @@
 const Metal = require('../Models/Metal'); // Unified casing
-
+const {addMetals}=require("../DatabaseFunction/postmetal")
+const {getMetals}=require("../DatabaseFunction/getMetals")
 // Get all metals
 exports.getAllMetals = async (req, res) => {
   try {
-    const metals = await Metal.find()
-    res.status(200).json(metals)
+    let allMetals=await getMetals()
+   
+    res.status(200).json(allMetals)
   } catch (error) {
     console.error("Error fetching metals:", error)
     res.status(500).json({ message: "Failed to fetch metals", error: error.message })
   }
 }
 
-// Get a single metal by ID
+// Get a single metal by ID??
 exports.getMetalById = async (req, res) => {
   try {
     const metal = await Metal.findById(req.params.id)
@@ -29,23 +31,18 @@ exports.getMetalById = async (req, res) => {
 
 // Create a new metal
 exports.createMetal = async (req, res) => {
+  
   try {
-    const { name, price, icon } = req.body
+    const { name, price, image,description } = req.body
 
     if (!name || !price) {
       return res.status(400).json({ message: "Name and price are required" })
     }
 
-    const newMetal = new Metal({
-      name,
-      price,
-      icon,
-      trend: 0,
-      lastUpdated: new Date(),
-    })
-
-    const savedMetal = await newMetal.save()
-    res.status(201).json(savedMetal)
+   await addMetals(name,price,image,description)
+   //noe we will make aget request agian to db and return the new data
+    this.getAllMetals(req,res)
+   
   } catch (error) {
     console.error("Error creating metal:", error)
     res.status(500).json({ message: "Failed to create metal", error: error.message })

@@ -71,6 +71,8 @@ const app = express();
 const AuthRouter = require('./Routes/AuthRouter');
 const ProductRouter = require('./Routes/ProductRouter');
 const ApiRoutes = require('./Routes/Index'); // Make sure this file exists
+const { connect } = require('./Connections/connection');
+// const { connectDB, connect } = require('./Connections/connection');
 
 // Middleware
 app.use(cors());
@@ -102,6 +104,7 @@ if (process.env.NODE_ENV === "production") {
 
 // Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log("connecting to server")
 });

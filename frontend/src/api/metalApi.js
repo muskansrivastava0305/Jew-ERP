@@ -3,7 +3,7 @@
 // Fetch all metals
 export const fetchAllMetals = async () => {
     try {
-      const response = await fetch("/api/metals")
+      const response = await fetch("http://localhost:5000/api/metals")
   
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`)
@@ -53,11 +53,12 @@ export const fetchAllMetals = async () => {
       throw error
     }
   }
-  
+ 
+
   // Create a new metal
   export const createMetal = async (metalData) => {
     try {
-      const response = await fetch("/api/metals", {
+      const response = await fetch("http://localhost:5000/api/metals", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +69,7 @@ export const fetchAllMetals = async () => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`)
       }
-  
+      // console.log("hello")
       return await response.json()
     } catch (error) {
       console.error("Error creating metal:", error)

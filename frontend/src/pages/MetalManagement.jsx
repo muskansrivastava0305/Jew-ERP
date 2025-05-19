@@ -5,6 +5,9 @@ import MetalSection from "./MetalSection"
 import StoneSection from "./StoneSection"
 import AddMetalModal from "./AddMetal"
 import AddStoneModal from "./AddStone"
+import { useEffect } from "react"
+import { fetchAllMetals } from "../api/metalApi"
+import { fetchAllStones } from "../api/stoneApi"
 
 function MetalManagement() {
   const [activeTab, setActiveTab] = useState("metal")
@@ -12,30 +15,26 @@ function MetalManagement() {
   const [showAddMetalModal, setShowAddMetalModal] = useState(false)
   const [showAddStoneModal, setShowAddStoneModal] = useState(false)
 
-  const [metals, setMetals] = useState([
-    { id: 1, name: "Gold", price: 500.0, image: "/pic.png" },
-    { id: 2, name: "Gold", price: 500.0, image: "/placeholder.svg?height=150&width=150" },
-    { id: 3, name: "Gold", price: 500.0, image: "/placeholder.svg?height=150&width=150" },
-    { id: 4, name: "Gold", price: 500.0, image: "/placeholder.svg?height=150&width=150" },
-    { id: 5, name: "Gold", price: 500.0, image: "/placeholder.svg?height=150&width=150" },
-    { id: 6, name: "Gold", price: 500.0, image: "/placeholder.svg?height=150&width=150" },
-  ])
-
-  const [stones, setStones] = useState([
-    { id: 1, name: "Diamond", price: 5000.0, image: "/placeholder.svg?height=150&width=150" },
-    { id: 2, name: "Ruby", price: 3000.0, image: "/placeholder.svg?height=150&width=150" },
-    { id: 3, name: "Emerald", price: 4000.0, image: "/placeholder.svg?height=150&width=150" },
-    { id: 4, name: "Sapphire", price: 3500.0, image: "/placeholder.svg?height=150&width=150" },
-  ])
+  const [metals, setMetals] = useState([])
+  
+  const [stones, setStones] = useState([])
 
   const handleAddMetal = (newMetal) => {
     setMetals([...metals, { ...newMetal, id: metals.length + 1 }])
   }
 
-  const handleAddStone = (newStone) => {
-    setStones([...stones, { ...newStone, id: stones.length + 1 }])
+  const handleAddStone = (newStones) => {
+    
+    setStones(newStones)
   }
-
+ useEffect(()=>{
+   fetchAllMetals().then((res)=>{
+    setMetals(res)
+   })
+   fetchAllStones().then((res)=>{
+    setStones(res)
+   })
+ },[])
   return (
     <div className="flex h-screen bg-gray-100">
       <div className="flex-1 flex flex-col overflow-hidden">
