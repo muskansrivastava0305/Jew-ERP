@@ -1,4 +1,3 @@
-"use client"
 
 import { useState } from "react"
 import EditProductModal from "./EditProduct"
@@ -31,7 +30,7 @@ const ProductGrid = ({ products, viewMode, onToggleActive, onEditProduct, onAddT
               <div className="p-3">
                 <div className="text-xs text-gray-600 mb-1">
                   {product.stock > 0 ? (
-                    <span className="text-green-600">In stock: {product.stock}</span>
+                    <span className="text-[#8AAE4A">In stock: {product.stock}</span>
                   ) : (
                     <span className="text-red-600">Out of stock</span>
                   )}
@@ -76,7 +75,7 @@ const ProductGrid = ({ products, viewMode, onToggleActive, onEditProduct, onAddT
                   onClick={() => onAddToCart(product.id)}
                   disabled={product.stock === 0}
                   className={`w-full py-1 rounded text-sm text-white ${
-                    product.stock > 0 ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 cursor-not-allowed"
+                    product.stock > 0 ? "bg-[#8AAE4A] hover:bg-green-700" : "bg-gray-400 cursor-not-allowed"
                   }`}
                 >
                   Add to cart

@@ -117,3 +117,19 @@ export const fetchAllMetals = async () => {
     }
   }
   
+
+
+
+//   app.put("/api/metals/:id", async (req, res) => {
+//   const { id } = req.params;
+//   const updatedData = req.body;
+
+//   try {
+//     const updatedMetal = await Metal.findByIdAndUpdate(id, updatedData, {
+//       new: true,
+//     });
+//     res.json(updatedMetal);
+//   } catch (error) {
+//     res.status(500).json({ message: "Failed to update metal" });
+//   }
+// });

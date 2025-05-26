@@ -1,248 +1,364 @@
-"use client"
-
-import { useState } from "react"
+import { useState } from "react";
+import { Plus, Upload } from "lucide-react";
 
 const AddProductModal = ({ onClose, onAdd }) => {
   const [formData, setFormData] = useState({
     name: "",
-    price: 0,
-    weight: 0,
-    stock: 0,
-    type: "Metal",
-    active: true,
-    materials: {
-      metal: "Metal",
-      stone: "Stone",
-      bronze: "Bronze 1",
-      pearl: "Pearl",
-      bronzeCode: "BR95",
-    },
-  })
+    description: "",
+    gender: "",
+    price: "",
+    stock: "",
+    weight: "",
+    type: "",
+    category: "",
+    metals: [{ metal: "", variant: "", weight: "" }],
+    stones: [{ stone: "", quantity: "", weight: "", price: "" }],
+    huidNumber: "",
+    hsnNumber: "",
+    makingCharges: "",
+    image: null,
+  });
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-    if (name.includes(".")) {
-      const [parent, child] = name.split(".")
-      setFormData({
-        ...formData,
-        [parent]: {
-          ...formData[parent],
-          [child]: value,
-        },
-      })
-    } else {
-      setFormData({
-        ...formData,
-        [name]: type === "checkbox" ? checked : type === "number" ? Number.parseFloat(value) || 0 : value,
-      })
-    }
-  }
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    setFormData((prev) => ({ ...prev, image: file }));
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    onAdd(formData)
-  }
+  const handleAddMetal = () => {
+    setFormData((prev) => ({
+      ...prev,
+      metals: [...prev.metals, { metal: "", variant: "", weight: "" }],
+    }));
+  };
 
-  return ( 
-    <div className="fixed inset-0 bg-transparent backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Add New Product</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+  const handleAddStone = () => {
+    setFormData((prev) => ({
+      ...prev,
+      stones: [
+        ...prev.stones,
+        { stone: "", quantity: "", weight: "", price: "" },
+      ],
+    }));
+  };
+
+  const handleMetalChange = (index, field, value) => {
+    const updated = [...formData.metals];
+    updated[index][field] = value;
+    setFormData((prev) => ({ ...prev, metals: updated }));
+  };
+
+  const handleStoneChange = (index, field, value) => {
+    const updated = [...formData.stones];
+    updated[index][field] = value;
+    setFormData((prev) => ({ ...prev, stones: updated }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        data.append(key, JSON.stringify(value));
+      } else {
+        data.append(key, value);
+      }
+    });
+    onAdd(data); // Call backend API handler
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-gray-800/30 bg-opacity-30 backdrop-blur-sm flex justify-center items-center ">
+      <div className="bg-white rounded-xl p-6 max-w-full overflow-y-auto max-h-[90vh]"> 
+        <div className=" flex justify-end">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-800 text-xl font-bold flex justify-right cursor-pointer"
+          >
+            ✕
           </button>
         </div>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-              Product Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="price">
-                Price (₹)
+          <div className=" flex gap-8">
+            <div className=" ">
+              <label className=" bg-gray-200 border w-30 h-30 rounded-lg flex items-center justify-center cursor-pointer">
+                {formData.image ? (
+                  <img
+                    src={URL.createObjectURL(formData.image)}
+                    alt="preview"
+                    className=" object-contain w-30 h-30"
+                  />
+                ) : (
+                  <span className="flex items-center gap-2 text-green-700">
+                    <Upload size={16} /> Upload
+                  </span>
+                )}
+                <input type="file" onChange={handleImageUpload} hidden />
               </label>
-              <input
-                type="number"
-                step="0.01"
-                id="price"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
             </div>
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="weight">
-                Weight (gm)
-              </label>
-              <input
-                type="number"
-                id="weight"
-                name="weight"
-                value={formData.weight}
-                onChange={handleChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
+            <div className="flex flex-col gap-2 justify-center items-center w-full">
+              <div className=" flex w-full">
+                <h1 className=" flex justify-start items-center w-30">Name</h1>
+                <input
+                  name="name"
+                  // placeholder="Name"
+                  onChange={handleChange}
+                  className="input bg-gray-100 rounded-md px-3 py-2 w-full"
+                />
+              </div>
+              <div className=" flex w-full">
+                <h3 className=" flex justify-start items-center w-30">
+                  Description
+                </h3>
+                <textarea
+                  name="description"
+                  placeholder="Description"
+                  onChange={handleChange}
+                  className="input col-span-2 bg-gray-100  px-3 py-2 rounded-md w-full"
+                />
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="stock">
-                Stock
-              </label>
-              <input
-                type="number"
-                id="stock"
-                name="stock"
-                value={formData.stock}
-                onChange={handleChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
+          <div className=" mt-3">
+            <div className=" flex gap-5">
+              <div className=" flex ">
+                <h3 className=" flex justify-start items-center  w-20">
+                  Gender
+                </h3>
+                <select
+                  name="gender"
+                  onChange={handleChange}
+                  className="input w-30 bg-gray-100 px-2 py-2 rounded-md"
+                >
+                  <option value="">Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+
+              <div className=" flex">
+                <h1 className=" flex justify-start items-center  w-20">
+                  Price
+                </h1>
+                <input
+                  name="price"
+                  placeholder="Price"
+                  onChange={handleChange}
+                  className="input  w-30 bg-gray-100 px-2 py-2 rounded-md"
+                />
+              </div>
+
+              <div className="flex ">
+                <h1 className=" w-20 flex justify-start items-center">Stock</h1>
+                <input
+                  name="stock"
+                  placeholder="In stock"
+                  onChange={handleChange}
+                  className="input  w-30 bg-gray-100 px-2 py-2 rounded-md"
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
-                Type
-              </label>
-              <select
-                id="type"
-                name="type"
-                value={formData.type}
-                onChange={handleChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
+
+            <div className=" flex gap-5 mt-3">
+              <div className=" flex">
+                <h1 className=" w-20 flex justify-start items-center">
+                  Weight
+                </h1>
+                <input
+                  name="weight"
+                  placeholder="Weight"
+                  onChange={handleChange}
+                  className="input w-30 bg-gray-100 px-2 py-2 rounded-md"
+                />
+              </div>
+              <div className=" flex ">
+                <h1 className=" w-20 flex justify-start items-center">Type</h1>
+                <select
+                  name="type"
+                  onChange={handleChange}
+                  className="input w-30 bg-gray-100 px-2 py-2 rounded-md"
+                >
+                  <option value="">Type</option>
+                  <option value="Ring">Ring</option>
+                  <option value="Chain">Chain</option>
+                </select>
+              </div>
+              <div className=" flex ">
+                <h1 className=" w-20 flex justify-start items-center">
+                  Category
+                </h1>
+                <input
+                  name="category"
+                  placeholder="Category"
+                  onChange={handleChange}
+                  className="input w-30 bg-gray-100 px-2 py-2 rounded-md"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-3">
+            <div className=" flex justify-between">
+              <label className="font-semibold">Select metal</label>
+              <button
+                type="button"
+                onClick={handleAddMetal}
+                className="btn-icon mt-1"
               >
-                <option value="Metal">Metal</option>
-                <option value="Artificial">Artificial</option>
-              </select>
+                <Plus size={20} />
+              </button>
             </div>
+            {formData.metals.map((item, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-3 gap-2 mt-2 bg-gray-100 p-3 rounded-md"
+              >
+                <div className=" flex gap-3 justify-start items-center">
+                  <h1 className="text-sm font-semibold">Metal</h1>
+                <input
+                  placeholder="Metal"
+                  value={item.metal}
+                  onChange={(e) =>
+                    handleMetalChange(i, "metal", e.target.value)
+                  }
+                  className="input bg-white rounded-md px-3 py-2 w-30"
+                />
+                </div>
+                <div className=" flex gap-3 justify-start items-center">
+                  <h1 className="text-sm font-semibold">Variant</h1>
+                <input
+                  placeholder="Variant"
+                  value={item.variant}
+                  onChange={(e) =>
+                    handleMetalChange(i, "variant", e.target.value)
+                  }
+                  className="input bg-white rounded-md px-3 py-2 w-30"
+                />
+                </div>
+                <div className=" flex gap-3 justify-start items-center">
+                  <h1 className="text-sm font-semibold">Weight</h1>
+                <input
+                  placeholder="Weight"
+                  value={item.weight}
+                  onChange={(e) =>
+                    handleMetalChange(i, "weight", e.target.value)
+                  }
+                  className="input bg-white rounded-md px-3 py-2 w-30"
+                />
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="mb-4">
-            <h3 className="text-gray-700 text-sm font-bold mb-2">Materials</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 text-xs mb-1" htmlFor="materials.metal">
-                  Metal
-                </label>
-                <input
-                  type="text"
-                  id="materials.metal"
-                  name="materials.metal"
-                  value={formData.materials.metal}
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-xs mb-1" htmlFor="materials.stone">
-                  Stone
-                </label>
-                <input
-                  type="text"
-                  id="materials.stone"
-                  name="materials.stone"
-                  value={formData.materials.stone}
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-xs mb-1" htmlFor="materials.bronze">
-                  Bronze
-                </label>
-                <input
-                  type="text"
-                  id="materials.bronze"
-                  name="materials.bronze"
-                  value={formData.materials.bronze}
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-xs mb-1" htmlFor="materials.bronzeCode">
-                  Bronze Code
-                </label>
-                <input
-                  type="text"
-                  id="materials.bronzeCode"
-                  name="materials.bronzeCode"
-                  value={formData.materials.bronzeCode}
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-xs mb-1" htmlFor="materials.pearl">
-                  Pearl
-                </label>
-                <input
-                  type="text"
-                  id="materials.pearl"
-                  name="materials.pearl"
-                  value={formData.materials.pearl}
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 text-sm leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-4 flex items-center">
-            <input
-              type="checkbox"
-              id="active"
-              name="active"
-              checked={formData.active}
-              onChange={handleChange}
-              className="mr-2"
-            />
-            <label className="text-gray-700 text-sm font-bold" htmlFor="active">
-              Active
-            </label>
-          </div>
-
-          <div className="flex justify-end">
-            <button
+          <div className="mt-3">
+    
+            <div className=" flex justify-between">
+            <label className="font-semibold">Select stone</label>
+             <button
               type="button"
-              onClick={onClose}
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2"
+              onClick={handleAddStone}
+              className="btn-icon mt-1"
             >
-              Cancel
+              <Plus size={20} />
             </button>
-            <button type="submit" className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-              Add Product
-            </button>
+            </div>
+            {formData.stones.map((item, i) => (
+              <div key={i} className="grid grid-cols-2 gap-2 mt-2 bg-gray-100 p-2 rounded-md">
+               <div className=" flex  justify-start items-center">
+                <h1 className="text-sm font-semibold w-16">Stone</h1>
+                <input
+                  placeholder="Stone"
+                  value={item.stone}
+                  onChange={(e) =>
+                    handleStoneChange(i, "stone", e.target.value)
+                  }
+                  className="input bg-white rounded-md px-3 py-2 w-30"
+                />
+                </div>
+                <div className=" flex gap-3 justify-start items-center">
+                <h1 className="text-sm font-semibold w-16">Quantity</h1>
+                <input
+                  placeholder="Quantity"
+                  value={item.quantity}
+                  onChange={(e) =>
+                    handleStoneChange(i, "quantity", e.target.value)
+                  }
+                  className="input bg-white rounded-md px-3 py-2 w-30"
+                />
+                </div>
+                <div className=" flex gap-3 justify-start items-center">
+                <h1 className="text-sm font-semibold w-16">Weight</h1>
+                <input
+                  placeholder="Weight"
+                  value={item.weight}
+                  onChange={(e) =>
+                    handleStoneChange(i, "weight", e.target.value)
+                  }
+                  className="input bg-white rounded-md px-3 py-2 w-30"
+                />
+                </div>
+                <div className=" flex gap-3 justify-start items-center">
+                <h1 className="text-sm font-semibold w-16">Price</h1>
+                <input
+                  placeholder="Price"
+                  value={item.price}
+                  onChange={(e) =>
+                    handleStoneChange(i, "price", e.target.value)
+                  }
+                  className="input bg-white rounded-md px-3 py-2 w-30"
+                />
+                </div>
+          
+              </div>
+            ))}
+           
           </div>
+
+          <div className="grid grid-cols-2 gap-4 mt-3">
+          <div className=" flex gap-3 justify-start items-center">
+            <h1 className="text-sm font-semibold w-30">HUID number</h1>
+            <input
+              name="huidNumber"
+              placeholder="HUID number"
+              onChange={handleChange}
+              className="input bg-gray-100 rounded-md px-3 py-2 "
+            />
+            </div>
+            <div className=" flex gap-3 justify-start items-center">
+            <h1 className="text-sm font-semibold w-30">HSN number</h1>
+            <input
+              name="hsnNumber"
+              placeholder="HSN number"
+              onChange={handleChange}
+              className="input  bg-gray-100 rounded-md px-3 py-2 "
+            />
+            </div>
+            <div className=" flex gap-3 justify-start items-center">
+            <h1 className="text-sm font-semibold w-30">Making charges</h1>
+            <input
+              name="makingCharges"
+              placeholder="Making charges"
+              onChange={handleChange}
+              className="input  bg-gray-100 rounded-md px-3 py-2 "
+            />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full mt-3 bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded"
+          >
+            Add product
+          </button>
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddProductModal
+export default AddProductModal;

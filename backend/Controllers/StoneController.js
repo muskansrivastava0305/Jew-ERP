@@ -2,6 +2,7 @@
   const Stone = require("../Models/Stone"); // Assuming you have a Stone model
   const {getStones} = require("../DatabaseFunction/getStones");
   const {addStones} = require("../DatabaseFunction/poststone");
+  
 
   // Get all stones
   exports.getAllStones = async (req, res) => {
@@ -16,22 +17,43 @@
   };
 
   // Get single stone by ID
- exports.getStoneById = async (req, res) => {
-    try {
-      const db = await connect();
-      const stonesCollection = db.collection("stone");
-      const stone = await stonesCollection.findOne({ _id: req.params.id });
-      
-      if (!stone) {
-        return res.status(404).json({ message: "Stone not found" });
-      }
-      
-      res.json(stone);
-    } catch (err) {
-      console.error(`Failed to fetch stone with ID ${req.params.id}:`, err);
-      res.status(500).json({ message: "Server error" });
+  const { ObjectId } = require("mongodb"); // Import ObjectId
+
+exports.getStoneById = async (req, res) => {
+  try {
+    const db = await connect();
+    const stonesCollection = db.collection("stone");
+
+    const stoneId = new ObjectId(req.params.id); // ✅ Convert string to ObjectId
+    const stone = await stonesCollection.findOne({ _id: stoneId });
+
+    if (!stone) {
+      return res.status(404).json({ message: "Stone not found" });
     }
-  };
+
+    res.json(stone);
+  } catch (err) {
+    console.error(`Failed to fetch stone with ID ${req.params.id}:`, err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+//  exports.getStoneById = async (req, res) => {
+//     try {
+//       const db = await connect();
+//       const stonesCollection = db.collection("stone");
+//       const stone = await stonesCollection.findOne({ _id: req.params.id });
+      
+//       if (!stone) {
+//         return res.status(404).json({ message: "Stone not found" });
+//       }
+      
+//       res.json(stone);
+//     } catch (err) {
+//       console.error(`Failed to fetch stone with ID ${req.params.id}:`, err);
+//       res.status(500).json({ message: "Server error" });
+//     }
+//   };
 
   // Create new stone
   exports.postStone = async (req, res) => {

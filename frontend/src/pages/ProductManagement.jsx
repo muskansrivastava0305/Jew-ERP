@@ -298,19 +298,19 @@ function ProductManagement() {
             <div className="flex space-x-2">
               <button
                 onClick={() => handleTabChange("All")}
-                className={`px-4 py-2 rounded-md ${activeTab === "All" ? "bg-green-600 text-white" : "bg-gray-200"}`}
+                className={`px-4 py-2 rounded-md ${activeTab === "All" ? "bg-[#8AAE4A] text-white" : "bg-gray-200"}`}
               >
                 All
               </button>
               <button
                 onClick={() => handleTabChange("Metal")}
-                className={`px-4 py-2 rounded-md ${activeTab === "Metal" ? "bg-green-600 text-white" : "bg-gray-200"}`}
+                className={`px-4 py-2 rounded-md ${activeTab === "Metal" ? "bg-[#8AAE4A] text-white" : "bg-gray-200"}`}
               >
                 Metal
               </button>
               <button
                 onClick={() => handleTabChange("Artificial")}
-                className={`px-4 py-2 rounded-md ${activeTab === "Artificial" ? "bg-green-600 text-white" : "bg-gray-200"}`}
+                className={`px-4 py-2 rounded-md ${activeTab === "Artificial" ? "bg-[#8AAE4A] text-white" : "bg-gray-200"}`}
               >
                 Artificial
               </button>
@@ -373,7 +373,7 @@ function ProductManagement() {
             {activeSection === "categories" ? (
               <button
                 onClick={() => setShowAddCategoryModal(true)}
-                className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md"
+                className="flex items-center px-4 py-2 bg-[#8AAE4A] text-white rounded-md"
               >
                 <span className="mr-2">+</span>
                 Add new category
@@ -381,7 +381,7 @@ function ProductManagement() {
             ) : (
               <button
                 onClick={() => setShowAddProductModal(true)}
-                className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md"
+                className="flex items-center px-4 py-2 bg-[#8AAE4A] text-white rounded-md"
               >
                 <span className="mr-2">+</span>
                 Add new product

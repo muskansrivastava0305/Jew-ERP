@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useState } from "react"
 import EditMetalPriceModal from "./EditMetalPriceModal"
@@ -55,13 +55,14 @@ const MetalPriceCard = ({ metal }) => {
 </div>
         <button
           onClick={() => setShowEditModal(true)}
-          className="mt-4 w-full py-2 bg-[#8AAE4A] text-white rounded-md hover:bg-green-600 transition-colors"
+          className="mt-4 w-full py-2 bg-[#8AAE4A] text-white rounded-md hover:bg-gray-200 hover:text-[#8AAE4A] text-md font-semibold cursor-pointer transition-colors"
         >
           Update Price
         </button>
       </div>
 
       {showEditModal && <EditMetalPriceModal metal={metal} onClose={() => setShowEditModal(false)} />}
+        
     </div>
   )
 }

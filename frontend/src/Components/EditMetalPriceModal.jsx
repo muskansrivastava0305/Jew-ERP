@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useState } from "react"
 import { XIcon } from "./Icons"
@@ -30,19 +30,19 @@ const EditMetalPriceModal = ({ metal, onClose }) => {
   }
 
   return (
-    <div className="fixed bg-transparent backdrop-blur-sm inset-0 bg-opacity-50 flex items-center justify-center z-50 px-4">
-      <div className="bg-gray-100 rounded-2xl shadow-xl max-w-md sm:max-w-lg md:max-w-xl">
-        <div className="flex justify-between items-center p-4 ">
-          <h3 className="font-semibold text-xl">{metal.name}</h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+    <div className="fixed backdrop-blur-sm bg-gray-800/30  inset-0 bg-opacity-50 flex items-center justify-center z-50 px-4">
+      <div className="bg-white rounded-2xl shadow-xl max-w-md sm:max-w-lg md:max-w-xl">
+        <div className="flex justify-end items-center p-4 ">
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 cursor-pointer">
             <XIcon className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="px-6 pt-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
-            <img src="/gold-bars.png" alt="Metal" className="w-14 h-14 mx-auto sm:mx-0" />
+        <div className="px-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0 gap-4">
+            <img src="/gold-bars.png" alt="Metal" className="w-28 h-28 bg-gray-200 rounded-md mx-auto sm:mx-0" />
             <div className="text-center sm:text-left">
+               <h3 className="font-semibold text-xl">{metal.name}</h3>
               <p className="text-2xl font-bold text-gray-900">
                 ₹45000.05 <span className="text-sm font-medium text-gray-500">/gm</span>
               </p>
