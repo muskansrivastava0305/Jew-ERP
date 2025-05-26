@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 
 const AddCategoryModal = ({ onClose, onAdd }) => {
@@ -9,6 +7,9 @@ const AddCategoryModal = ({ onClose, onAdd }) => {
     active: true,
   })
 
+  const [image, setImage] = useState(null)
+  const [preview, setPreview] = useState(null)
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
     setFormData({
@@ -17,38 +18,43 @@ const AddCategoryModal = ({ onClose, onAdd }) => {
     })
   }
 
-//   const handleSubmit = (e) => {
-//     e.preventDefault()
-//     onAdd(formData)
-//   }
-
-
-const handleSubmit = async (e) => {
-  e.preventDefault()
-
-  try {
-    const res = await fetch("http://localhost:5000/api/categories", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-
-    const data = await res.json()
-
-    if (res.ok) {
-      alert("Category added successfully!")
-      onAdd(data.category) // you can add this to the local state in parent
-      onClose()
-    } else {
-      alert("Error: " + data.message)
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setImage(file)
+      setPreview(URL.createObjectURL(file))
     }
-  } catch (err) {
-    console.error("Add category error:", err)
-    alert("An error occurred while adding the category.")
   }
-}
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const form = new FormData()
+    form.append("name", formData.name)
+    form.append("type", formData.type)
+    form.append("active", formData.active)
+    if (image) form.append("image", image)
+
+    try {
+      const res = await fetch("http://localhost:5000/api/categories", {
+        method: "POST",
+        body: form,
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert("Category added successfully!")
+        onAdd(data.category)
+        onClose()
+      } else {
+        alert("Error: " + data.message)
+      }
+    } catch (err) {
+      console.error("Add category error:", err)
+      alert("An error occurred while adding the category.")
+    }
+  }
 
   return (
     <div className="fixed inset-0 bg-transparent backdrop-blur-xs bg-opacity-50 flex items-center justify-center z-50">
@@ -67,10 +73,49 @@ const handleSubmit = async (e) => {
             </svg>
           </button>
         </div>
+
         <form onSubmit={handleSubmit}>
+          {/* Image Upload */}
+          <div className="mb-4">
+            <div className="relative w-24 h-24 bg-gray-200 rounded-md overflow-hidden flex items-center justify-center">
+              {preview ? (
+                <img src={preview} alt="Preview" className="w-full h-full object-cover" />
+              ) : (
+                <>
+                  <label className="absolute inset-0 flex items-center justify-center cursor-pointer bg-opacity-10 hover:bg-opacity-20 transition">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                    <div className="flex flex-col items-center text-green-900 text-sm font-semibold">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mb-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v8m0-8l-3 3m3-3l3 3M12 4v4"
+                        />
+                      </svg>
+                      Upload
+                    </div>
+                  </label>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Category Name */}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-              Category Name
+              Category name
             </label>
             <input
               type="text"
@@ -82,9 +127,11 @@ const handleSubmit = async (e) => {
               required
             />
           </div>
+
+          {/* Category Type */}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
-              Category Type
+              Jewellery type
             </label>
             <select
               id="type"
@@ -98,31 +145,14 @@ const handleSubmit = async (e) => {
               <option value="Artificial">Artificial</option>
             </select>
           </div>
-          <div className="mb-4 flex items-center">
-            <input
-              type="checkbox"
-              id="active"
-              name="active"
-              checked={formData.active}
-              onChange={handleChange}
-              className="mr-2"
-            />
-            <label className="text-gray-700 text-sm font-bold" htmlFor="active">
-              Active
-            </label>
-          </div>
-          <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={onClose}
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2"
-            >
-              Cancel
-            </button>
-            <button type="submit" className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-              Add Category
-            </button>
-          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-lime-600 hover:bg-lime-700 text-white font-semibold py-2 rounded mt-2"
+          >
+            Add category
+          </button>
         </form>
       </div>
     </div>
@@ -130,3 +160,5 @@ const handleSubmit = async (e) => {
 }
 
 export default AddCategoryModal
+
+

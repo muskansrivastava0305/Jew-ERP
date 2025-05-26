@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useState } from "react"
 
@@ -70,7 +70,7 @@ const EditProductModal = ({ product, onClose, onSave }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-gray-800/30 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Edit Product</h2>
@@ -80,7 +80,7 @@ const EditProductModal = ({ product, onClose, onSave }) => {
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex items-center gap-4">
-            <div className="w-24 h-24 bg-gray-100 rounded flex items-center justify-center relative">
+            <div className="w-30 h-30 bg-gray-100 rounded flex items-center justify-center relative">
               {formData.image ? (
                 <img src={formData.image} alt="Preview" className="object-cover w-full h-full rounded" />
               ) : (
@@ -93,9 +93,15 @@ const EditProductModal = ({ product, onClose, onSave }) => {
                 className="absolute inset-0 opacity-0 cursor-pointer"
               />
             </div>
-            <div className="flex-1 grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-4">
+               <div className=" flex w-full">
+                <h1 className=" flex justify-start items-center w-30">Name</h1>
               <input name="name" placeholder="Name" value={formData.name} onChange={handleChange} className="input" />
+            </div>
+            <div className=" flex w-full">
+              <h1 className=" flex justify-start items-center w-30">Description</h1>
               <input name="description" placeholder="Description" value={formData.description} onChange={handleChange} className="input" />
+              </div>
             </div>
           </div>
 
@@ -105,18 +111,18 @@ const EditProductModal = ({ product, onClose, onSave }) => {
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
-            <input name="price" type="number" placeholder="Price" value={formData.price} onChange={handleChange} className="input" />
-            <input name="stock" type="number" placeholder="In Stock" value={formData.stock} onChange={handleChange} className="input" />
-            <input name="weight" type="number" placeholder="Weight" value={formData.weight} onChange={handleChange} className="input" />
+            <input name="price" type="number" placeholder="Price" value={formData.price} onChange={handleChange} className="input bg-gray-100 p-2 rounded-md" />
+            <input name="stock" type="number" placeholder="In Stock" value={formData.stock} onChange={handleChange} className="input bg-gray-100 p-2 rounded-md" />
+            <input name="weight" type="number" placeholder="Weight" value={formData.weight} onChange={handleChange} className="input bg-gray-100 p-2 rounded-md" />
           </div>
 
           <div className="grid grid-cols-3 gap-4">
-            <select name="type" value={formData.type} onChange={handleChange} className="input">
+            <select name="type" value={formData.type} onChange={handleChange} className="input bg-gray-100 p-2 rounded-md">
               <option value="">Type</option>
               <option value="Ring">Ring</option>
               <option value="Necklace">Necklace</option>
             </select>
-            <select name="category" value={formData.category} onChange={handleChange} className="input">
+            <select name="category" value={formData.category} onChange={handleChange} className="input bg-gray-100 p-2 rounded-md">
               <option value="">Category</option>
               <option value="Gold">Gold</option>
               <option value="Silver">Silver</option>
@@ -130,20 +136,20 @@ const EditProductModal = ({ product, onClose, onSave }) => {
                 <input
                   value={item.metal}
                   onChange={(e) => handleMetalChange(idx, "metal", e.target.value)}
-                  className="input"
+                  className="input bg-gray-100 p-2 rounded-md"
                   placeholder="Metal"
                 />
                 <input
                   value={item.variant}
                   onChange={(e) => handleMetalChange(idx, "variant", e.target.value)}
-                  className="input"
+                  className="input bg-gray-100 p-2 rounded-md"
                   placeholder="Variant"
                 />
                 <input
                   type="number"
                   value={item.weight}
                   onChange={(e) => handleMetalChange(idx, "weight", e.target.value)}
-                  className="input"
+                  className="input bg-gray-100 p-2 rounded-md"
                   placeholder="Weight"
                 />
               </div>
@@ -158,28 +164,28 @@ const EditProductModal = ({ product, onClose, onSave }) => {
                 <input
                   value={item.stone}
                   onChange={(e) => handleStoneChange(idx, "stone", e.target.value)}
-                  className="input"
+                  className="input bg-gray-100 p-2 rounded-md"
                   placeholder="Stone"
                 />
                 <input
                   type="number"
                   value={item.quantity}
                   onChange={(e) => handleStoneChange(idx, "quantity", e.target.value)}
-                  className="input"
+                  className="input bg-gray-100 p-2 rounded-md"
                   placeholder="Quantity"
                 />
                 <input
                   type="number"
                   value={item.weight}
                   onChange={(e) => handleStoneChange(idx, "weight", e.target.value)}
-                  className="input"
+                  className="input bg-gray-100 p-2 rounded-md"
                   placeholder="Weight"
                 />
                 <input
                   type="number"
                   value={item.price}
                   onChange={(e) => handleStoneChange(idx, "price", e.target.value)}
-                  className="input"
+                  className="input bg-gray-100 p-2 rounded-md"
                   placeholder="Price"
                 />
               </div>
@@ -188,13 +194,13 @@ const EditProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           <div className="grid grid-cols-3 gap-4">
-            <input name="huid" placeholder="HUID number" value={formData.huid} onChange={handleChange} className="input" />
-            <input name="hsn" placeholder="HSN number" value={formData.hsn} onChange={handleChange} className="input" />
-            <input name="makingCharges" placeholder="Making charges" type="number" value={formData.makingCharges} onChange={handleChange} className="input" />
+            <input name="huid" placeholder="HUID number" value={formData.huid} onChange={handleChange} className="input bg-gray-100 p-2 rounded-md" />
+            <input name="hsn" placeholder="HSN number" value={formData.hsn} onChange={handleChange} className="input bg-gray-100 p-2 rounded-md" />
+            <input name="makingCharges" placeholder="making Charges" value={formData.makingCharges} onChange={handleChange} className="input bg-gray-100 p-2 rounded-md " />
           </div>
 
           <div className="text-center">
-            <button type="submit" className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            <button type="submit" className="bg-[#8AAE4A] hover:bg-gray-200 hover:text-[#8AAE4A] cursor-pointer text-white font-bold py-2 px-4 rounded">
               Add Product
             </button>
           </div>
@@ -213,7 +219,6 @@ export default EditProductModal
 
 
 
-// "use client"
 
 // import { useState } from "react"
 

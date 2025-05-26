@@ -1,10 +1,11 @@
-"use client"
 
 import { useState } from "react"
 import EditProductModal from "./EditProduct"
+import { useCart } from "./CartContext"
 
 const ProductGrid = ({ products, viewMode, onToggleActive, onEditProduct, onAddToCart }) => {
   const [editingProduct, setEditingProduct] = useState(null)
+  const { addToCart } = useCart()
 
   const handleEditClick = (product) => {
     setEditingProduct(product)
@@ -14,6 +15,13 @@ const ProductGrid = ({ products, viewMode, onToggleActive, onEditProduct, onAddT
     onEditProduct(editingProduct.id, updatedProduct)
     setEditingProduct(null)
   }
+
+  
+
+const handleAddToCart = (product) => {
+  addToCart(product)
+}
+
 
   if (viewMode === "grid") {
     return (
@@ -31,7 +39,7 @@ const ProductGrid = ({ products, viewMode, onToggleActive, onEditProduct, onAddT
               <div className="p-3">
                 <div className="text-xs text-gray-600 mb-1">
                   {product.stock > 0 ? (
-                    <span className="text-green-600">In stock: {product.stock}</span>
+                    <span className="text-[#8AAE4A">In stock: {product.stock}</span>
                   ) : (
                     <span className="text-red-600">Out of stock</span>
                   )}
@@ -73,10 +81,11 @@ const ProductGrid = ({ products, viewMode, onToggleActive, onEditProduct, onAddT
                   </button>
                 </div>
                 <button
-                  onClick={() => onAddToCart(product.id)}
+                  // onClick={() => onAddToCart(product.id)}
+                   onClick={() => handleAddToCart(product)} 
                   disabled={product.stock === 0}
                   className={`w-full py-1 rounded text-sm text-white ${
-                    product.stock > 0 ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 cursor-not-allowed"
+                    product.stock > 0 ? "bg-[#8AAE4A] hover:bg-green-700" : "bg-gray-400 cursor-not-allowed"
                   }`}
                 >
                   Add to cart
@@ -182,7 +191,8 @@ const ProductGrid = ({ products, viewMode, onToggleActive, onEditProduct, onAddT
                       Edit details
                     </button>
                     <button
-                      onClick={() => onAddToCart(product.id)}
+                      // onClick={() => onAddToCart(product.id)}
+                       onClick={() => handleAddToCart(product)} 
                       disabled={product.stock === 0}
                       className={`text-sm ${
                         product.stock > 0 ? "text-green-600 hover:text-green-800" : "text-gray-400 cursor-not-allowed"

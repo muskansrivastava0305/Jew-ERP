@@ -109,19 +109,19 @@ function Home() {
           <h2 className="text-lg font-semibold">Sales Graph</h2>
           <div className="flex space-x-2">
             <button
-              className={`px-3 py-1 text-sm rounded-md ${graphPeriod === "daily" ? "bg-green-100 text-green-800" : "bg-gray-100"}`}
+              className={`px-3 py-1 text-sm rounded-md ${graphPeriod === "daily" ? "bg-green-100 text-[#8AAE4A]" : "bg-gray-100"}`}
               onClick={() => handleGraphPeriodChange("daily")}
             >
               Daily
             </button>
             <button
-              className={`px-3 py-1 text-sm rounded-md ${graphPeriod === "weekly" ? "bg-green-100 text-green-800" : "bg-gray-100"}`}
+              className={`px-3 py-1 text-sm rounded-md ${graphPeriod === "weekly" ? "bg-green-100 text-[#8AAE4A}" : "bg-gray-100"}`}
               onClick={() => handleGraphPeriodChange("weekly")}
             >
               Weekly
             </button>
             <button
-              className={`px-3 py-1 text-sm rounded-md ${graphPeriod === "monthly" ? "bg-green-100 text-green-800" : "bg-gray-100"}`}
+              className={`px-3 py-1 text-sm rounded-md ${graphPeriod === "monthly" ? "bg-green-100 text-[#8AAE4A]" : "bg-gray-100"}`}
               onClick={() => handleGraphPeriodChange("monthly")}
             >
               Monthly

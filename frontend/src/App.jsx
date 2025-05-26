@@ -10,6 +10,8 @@ import MetalManagement from './pages/MetalManagement'
 import CategoryManagement from './pages/CategoryManagement'
 import ProductManagement from './pages/ProductManagement'
 import './index.css'
+import Salesmanegement from './pages/SalesManagement'
+import CartPage from './pages/CartPage'
 
 const App = () => {
   return (
@@ -32,6 +34,8 @@ const App = () => {
         <Route path="/metal-management" element={<MetalManagement />} /> {/* <-- Fixed */}
         <Route path="/category-management" element={<CategoryManagement />} />
         <Route path="/Product-Management" element={<ProductManagement />} />
+        <Route path="/sales-management" element={<Salesmanegement />} />
+        <Route path= "/cart-page" element={< CartPage /> } />
       </Route>
     </Routes>
   )

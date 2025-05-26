@@ -40,7 +40,7 @@ const CategoryGrid = ({ categories, viewMode, onToggleActive, onEditCategory }) 
                     />
                     <label
                       htmlFor={`toggle-${category.id}`}
-                      className={`block overflow-hidden h-6 rounded-full cursor-pointer ${category.active ? "bg-green-600" : "bg-gray-300"}`}
+                      className={`block overflow-hidden h-6 rounded-full cursor-pointer ${category.active ? "bg-[#8AAE4A]" : "bg-gray-300"}`}
                     >
                       <span
                         className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ease-in-out ${category.active ? "transform translate-x-4" : ""}`}
@@ -53,7 +53,7 @@ const CategoryGrid = ({ categories, viewMode, onToggleActive, onEditCategory }) 
                 </div>
                 <button
                   onClick={() => handleEditClick(category)}
-                  className="w-full py-1 bg-gray-300 hover:bg-gray-400 rounded text-sm"
+                  className="w-full py-1 text-white font-semibold bg-[#8AAE4A] hover:bg-gray-400 rounded text-md"
                 >
                   Edit details
                 </button>

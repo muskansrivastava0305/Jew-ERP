@@ -1,13 +1,17 @@
-"use client"
+
 
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { BellIcon } from "./Icons"
 import ProfileDropdown from "./ProfileDropdown"
+import { useCart } from "./CartContext"
+import { ShoppingCartIcon } from "lucide-react"
+
 
 const Header = () => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
   const navigate = useNavigate()
+   const { cartItems } = useCart();
 
   // This would come from your auth context or API
   const user = {
@@ -30,6 +34,17 @@ const Header = () => {
       <h1 className="text-xl font-bold">Hello Admin</h1>
 
       <div className="flex items-center space-x-4">
+        <button
+          className="relative p-2 rounded-full hover:bg-gray-100"
+          onClick={() => navigate("/cart-page")}
+        >
+          <ShoppingCartIcon className="w-6 h-6 text-gray-600" />
+          {cartItems.length > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+              {cartItems.length}
+            </span>
+          )}
+        </button>
         <button className="p-2 rounded-full hover:bg-gray-100">
           <BellIcon className="w-6 h-6 text-gray-600" />
         </button>

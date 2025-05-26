@@ -1,7 +1,11 @@
 
 import { useState } from "react"
 import { createMetal } from "../api/metalApi"
+
 import {PlusCircle, X } from "lucide-react"
+
+
+
 
 const AddMetalModal = ({ onClose, onAddMetal }) => {
   const [formData, setFormData] = useState({
@@ -73,22 +77,38 @@ const AddMetalModal = ({ onClose, onAddMetal }) => {
 
       // Create a new metal object
 
-      const newMetal = {
-        name: formData.name,
-        price: parseFloat(formData.price),
-        unit: formData.unit,
-        standardPurity: formData.standardPurity,
-        standardPurityPrice: formData.standardPurityPrice,
-        image: previewUrl || "/placeholder.svg",
-        description: formData.description,
+      // const newMetal = {
+      //   name: formData.name,
+      //   price: parseFloat(formData.price),
+      //   unit: formData.unit,
+      //   standardPurity: formData.standardPurity,
+      //   standardPurityPrice: formData.standardPurityPrice,
+      //   image: previewUrl || "/placeholder.svg",
+      //   description: formData.description,
 
-      }
+      // }
      
-       let finalArrayOfMetals =await createMetal(newMetal)
-      // Add the new metal
-      onAddMetal(newMetal)
+      //  let finalArrayOfMetals =await createMetal(newMetal)
+      // // Add the new metal
+      // onAddMetal(newMetal)
 
-      onAddMetal(newMetal);
+      const metalData = {
+  name: formData.name,
+  price: parseFloat(formData.price),
+  unit: formData.unit,
+  standardPurity: formData.standardPurity,
+  standardPurityPrice: formData.standardPurityPrice,
+  image: previewUrl || "/placeholder.svg",
+  description: formData.description,
+  variants: variants, // include all variant entries here
+};
+
+const createdMetal = await createMetal(metalData); // Send full data to backend
+
+onAddMetal(createdMetal); // Use backend response if it returns saved metal
+
+
+      // onAddMetal(newMetal);
       onClose();
     } catch (error) {
       console.error("Error creating metal:", error);
@@ -100,7 +120,7 @@ const AddMetalModal = ({ onClose, onAddMetal }) => {
   // Harshit chauhan 
 
   return (
-    <div className="fixed inset-0  bg-transparent backdrop-blur-sm bg-opacity-30 flex items-center justify-center z-50">
+    <div className="fixed inset-0  bg-gray-800/30 backdrop-blur-sm bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-gray-100 rounded-lg shadow-xl w-full max-w-2xl">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-medium">Add New Metal</h2>

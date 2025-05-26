@@ -16,16 +16,35 @@
 
 // module.exports = router;
 
-const express = require("express");
+// const express = require("express");
+// const router = express.Router();
+// const productCtrl = require("../Controllers/ProductController");
+
+
+
+// // Product routes
+// router.get("/products", productCtrl.getAllProducts);
+// router.post("/products", productCtrl.createProduct);
+// router.put("/products/:id", productCtrl.updateProduct);
+// router.delete("/products/:id", productCtrl.deleteProduct);
+
+// module.exports = router;
+
+
+const express = require('express');
 const router = express.Router();
-const productCtrl = require("../Controllers/ProductController");
+const multer = require('multer');
+const { createProduct } = require('../controllers/productController');
 
+// Upload Config
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, 'uploads/'),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+});
+const upload = multer({ storage });
 
-
-// Product routes
-router.get("/products", productCtrl.getAllProducts);
-router.post("/products", productCtrl.createProduct);
-router.put("/products/:id", productCtrl.updateProduct);
-router.delete("/products/:id", productCtrl.deleteProduct);
+// @POST /api/products
+router.post('/', upload.single('image'), createProduct);
 
 module.exports = router;
+

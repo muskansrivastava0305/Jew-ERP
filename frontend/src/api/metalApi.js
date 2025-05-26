@@ -52,6 +52,7 @@ export const updateMetalPrice = async (id, price) => {
     console.error(`Error updating price for metal with ID ${id}:`, error);
     throw error;
   }
+
 };
 //  
 
@@ -99,7 +100,7 @@ export const updateMetal = async (id, metalData) => {
     throw error;
   }
 };
-// -> Harshit Chauhan <-//-> K and A Technology <-//-> As Web Developer <-// Ever thing is online but all the online thing are good? (//*W-O-0-W*\\)
+
 
 // Delete a metal // Double Cross done with Hartaj // Crocodiles 
 export const deleteMetal = async (id) => {
@@ -118,3 +119,22 @@ export const deleteMetal = async (id) => {
     throw error;
   }
 };
+
+  
+
+
+
+//   app.put("/api/metals/:id", async (req, res) => {
+//   const { id } = req.params;
+//   const updatedData = req.body;
+
+//   try {
+//     const updatedMetal = await Metal.findByIdAndUpdate(id, updatedData, {
+//       new: true,
+//     });
+//     res.json(updatedMetal);
+//   } catch (error) {
+//     res.status(500).json({ message: "Failed to update metal" });
+//   }
+// });
+// >>>>>>> fcc56c8ab518c90695102c101d94d17861179269

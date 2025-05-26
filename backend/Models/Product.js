@@ -1,20 +1,34 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const ProductSchema = new mongoose.Schema({
-  name: String,
-  price: Number,
+const metalSchema = new mongoose.Schema({
+  metal: String,
+  variant: String,
   weight: Number,
-  stock: Number,
-  active: { type: Boolean, default: true },
-  type: String,
-  materials: {
-    metal: String,
-    stone: String,
-    bronze: String,
-    pearl: String,
-    bronzeCode: String,
-  },
-  image: String,
 });
 
-module.exports = mongoose.model("Product", ProductSchema);
+const stoneSchema = new mongoose.Schema({
+  stone: String,
+  quantity: Number,
+  weight: Number,
+  price: Number,
+});
+
+const productSchema = new mongoose.Schema({
+  name: String,
+  description: String,
+  price: Number,
+  stock: Number,
+  weight: Number,
+  type: String,
+  gender: String,
+  category: String,
+  image: String,
+  metals: [metalSchema],
+  stones: [stoneSchema],
+  huidNumber: String,
+  hsnNumber: String,
+  makingCharges: Number,
+  active: Boolean,
+}, { timestamps: true });
+
+module.exports = mongoose.model('Product', productSchema);

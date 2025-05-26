@@ -1,16 +1,22 @@
-"use client"
+
 import { useState } from "react"
+import StoneDetailsModal from "../Components/StoneDetails"
+import StoneEditModal from "./EditStones"
 
 const StoneSection = ({ stones, viewMode, onAddClick }) => {
   const [activeStatus, setActiveStatus] = useState(() =>
     stones.reduce((acc, stone) => {
-      acc[stone.id] = true // default all to active
+      acc[stone._id] = true // default all to active
       return acc
     }, {})
   )
   const [selectedId, setSelectedId] = useState(null)
   const [showConfirm, setShowConfirm] = useState(false)
   const [nextStatus, setNextStatus] = useState(null)
+  const [selectedStoneId, setSelectedStoneId] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editingStone, setEditingStone] = useState(null);
+
 
   const handleToggleClick = (id) => {
     setSelectedId(id)
@@ -34,16 +40,17 @@ const StoneSection = ({ stones, viewMode, onAddClick }) => {
     setNextStatus(null)
   }
 
-  const handleEditDetails = (id) => {
-    console.log(`Edit stone with id: ${id}`)
-  }
+ const handleEditDetails = (id) => {
+  setSelectedStoneId(id);
+};
+
 
   return (
     <div className="relative">
       {viewMode === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {stones.map((stone) => (
-            <div key={stone.id} className="bg-white rounded-md overflow-hidden shadow">
+            <div key={stone._id} className="bg-white rounded-md overflow-hidden shadow">
               <div className="h-40 bg-gray-200">
                 <img src={stone.image || "/placeholder.svg"} alt={stone.name} className="w-full h-full object-cover" />
               </div>
@@ -56,15 +63,15 @@ const StoneSection = ({ stones, viewMode, onAddClick }) => {
                   <label className="relative inline-flex items-center cursor-pointer mr-1">
                     <input
                       type="checkbox"
-                      checked={activeStatus[stone.id]}
-                      onChange={() => handleToggleClick(stone.id)}
+                      checked={activeStatus[stone._id]}
+                      onChange={() => handleToggleClick(stone._id)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#8BAD3F] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#8BAD3F]"></div>
                   </label>
                   <button
                     className="px-3 py-1 bg-[#8BAD3F] text-white text-sm rounded-md hover:bg-[#7A9A35]"
-                    onClick={() => handleEditDetails(stone.id)}
+                    onClick={() => handleEditDetails(stone._id)}
                   >
                     Edit details
                   </button>
@@ -92,7 +99,7 @@ const StoneSection = ({ stones, viewMode, onAddClick }) => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {stones.map((stone) => (
-                <tr key={stone.id}>
+                <tr key={stone._id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="w-12 h-12 rounded-md overflow-hidden">
                       <img
@@ -109,14 +116,14 @@ const StoneSection = ({ stones, viewMode, onAddClick }) => {
                       <input
                         type="checkbox"
                         checked={activeStatus[stone.id]}
-                        onChange={() => handleToggleClick(stone.id)}
+                        onChange={() => handleToggleClick(stone._id)}
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#8BAD3F] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#8BAD3F]"></div>
                     </label>
                     <button
                       className="px-3 py-1 bg-[#8BAD3F] text-white text-sm rounded-md hover:bg-[#7A9A35]"
-                      onClick={() => handleEditDetails(stone.id)}
+                      onClick={() => handleEditDetails(stone._id)}
                     >
                       Edit details
                     </button>
@@ -168,6 +175,30 @@ const StoneSection = ({ stones, viewMode, onAddClick }) => {
           </div>
         </div>
       )}
+
+      {selectedStoneId && (
+        <StoneDetailsModal
+          stoneId={selectedStoneId}
+          onClose={() => setSelectedStoneId(null)}
+          onEditClick={(stone) => {
+            console.log("Edit stone:", stone)
+            setEditingStone(stone);           // 👈 this opens the edit modal
+      setSelectedStoneId(null);
+          }}
+        />
+      )}
+
+      {editingStone && (
+  <StoneEditModal
+    stone={editingStone}
+    onClose={() => setEditingStone(null)}
+    onSave={() => {
+      setShowEditModal(null);
+      // setSelectedStoneId(null);
+      // optionally re-fetch stones
+    }}
+  />
+)}
     </div>
   )
 }
