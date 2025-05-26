@@ -54,20 +54,19 @@ export const updateMetalPrice = async (id, price) => {
   }
 
 };
-//  
+//
 
-// 
+//
 // Create a new metal
 export const createMetal = async (metalData) => {
   try {
     const response = await fetch("http://localhost:5000/api/metals", {
       method: "POST",
-      headers: { 
+      headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(metalData),
     });
-    console.log(response);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -102,7 +101,7 @@ export const updateMetal = async (id, metalData) => {
 };
 
 
-// Delete a metal // Double Cross done with Hartaj // Crocodiles 
+// Delete a metal // Double Cross done with Hartaj // Crocodiles
 export const deleteMetal = async (id) => {
   try {
     const response = await fetch(`/api/metals/${id}`, {

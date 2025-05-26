@@ -7,7 +7,7 @@ const DashboardController = require("../Controllers/DashboardController");
 const CustomerController = require("../Controllers/CustomerController");
 const UserController = require("../Controllers/UserController");
 const AuthRouter = require("./AuthRouter"); // ✅ IMPORT AUTH ROUTER
-const StonesController = require("../Controllers/StoneController");
+const StonesController = require("./../Controllers/StoneController");
 const ImageController = require("../Controllers/ImageController");
 const CategoryController = require("../Controllers/CategoryController");
 // ✅ Use the AuthRouter at '/auth'

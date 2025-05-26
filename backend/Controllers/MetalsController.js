@@ -36,6 +36,7 @@ exports.getMetalById = async (req, res) => {
 // Create a new metal
 exports.createMetal = async (req, res) => {
   try {
+    console.log("incoming req");
     const { name, unit, standardPurity, standardPurityPrice, image, varients } =
       req.body;
 
