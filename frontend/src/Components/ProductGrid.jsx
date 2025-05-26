@@ -1,9 +1,11 @@
 
 import { useState } from "react"
 import EditProductModal from "./EditProduct"
+import { useCart } from "./CartContext"
 
 const ProductGrid = ({ products, viewMode, onToggleActive, onEditProduct, onAddToCart }) => {
   const [editingProduct, setEditingProduct] = useState(null)
+  const { addToCart } = useCart()
 
   const handleEditClick = (product) => {
     setEditingProduct(product)
@@ -13,6 +15,13 @@ const ProductGrid = ({ products, viewMode, onToggleActive, onEditProduct, onAddT
     onEditProduct(editingProduct.id, updatedProduct)
     setEditingProduct(null)
   }
+
+  
+
+const handleAddToCart = (product) => {
+  addToCart(product)
+}
+
 
   if (viewMode === "grid") {
     return (
@@ -72,7 +81,8 @@ const ProductGrid = ({ products, viewMode, onToggleActive, onEditProduct, onAddT
                   </button>
                 </div>
                 <button
-                  onClick={() => onAddToCart(product.id)}
+                  // onClick={() => onAddToCart(product.id)}
+                   onClick={() => handleAddToCart(product)} 
                   disabled={product.stock === 0}
                   className={`w-full py-1 rounded text-sm text-white ${
                     product.stock > 0 ? "bg-[#8AAE4A] hover:bg-green-700" : "bg-gray-400 cursor-not-allowed"
@@ -181,7 +191,8 @@ const ProductGrid = ({ products, viewMode, onToggleActive, onEditProduct, onAddT
                       Edit details
                     </button>
                     <button
-                      onClick={() => onAddToCart(product.id)}
+                      // onClick={() => onAddToCart(product.id)}
+                       onClick={() => handleAddToCart(product)} 
                       disabled={product.stock === 0}
                       className={`text-sm ${
                         product.stock > 0 ? "text-green-600 hover:text-green-800" : "text-gray-400 cursor-not-allowed"

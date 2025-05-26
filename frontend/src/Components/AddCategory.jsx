@@ -82,7 +82,7 @@ const AddCategoryModal = ({ onClose, onAdd }) => {
                 <img src={preview} alt="Preview" className="w-full h-full object-cover" />
               ) : (
                 <>
-                  <label className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black bg-opacity-10 hover:bg-opacity-20 transition">
+                  <label className="absolute inset-0 flex items-center justify-center cursor-pointer bg-opacity-10 hover:bg-opacity-20 transition">
                     <input
                       type="file"
                       accept="image/*"
