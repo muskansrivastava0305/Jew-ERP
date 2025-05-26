@@ -73,7 +73,8 @@ const EditMetalPriceModal = ({ metal, onClose }) => {
               className="w-full sm:w-2/5 shadow border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
               required
             />
-
+{/* /sir aaj tabiyat bilkul thik nhi hai - Sir today my health is good */}
+{/* muje sir mai or akhon mai dard ho rha hai - Sir my eyes and my head kl*/}
             <select className="w-full sm:w-1/5 border rounded-lg px-2 py-2 text-sm text-gray-700 bg-white">
               <option>gram</option>
             </select>
@@ -103,9 +104,6 @@ const EditMetalPriceModal = ({ metal, onClose }) => {
 }
 
 export default EditMetalPriceModal
-
-
-
 
 // "use client"
 

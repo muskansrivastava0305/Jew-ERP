@@ -8,7 +8,7 @@ export const fetchMetals = async () => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`)
       }
-  
+      // Harshit Chauhan qwert
       // return await response.json()
       return [
         {
@@ -47,7 +47,7 @@ export const fetchMetals = async () => {
     } catch (error) {
       console.error("Error fetching metals:", error)
       // For demo purposes, return mock data if API fails
-      
+       
     }
   }
   

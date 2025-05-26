@@ -1,29 +1,52 @@
-const { connect } = require('../Connections/connection');
+const Metal = require('../Models/Metal'); // Adjust path if necessary
 
-async function addMetals(name, price, image, description) {
+async function addMetals({
+  name,
+  price,
+  icon = "/placeholder.svg?height=150&width=150",
+  unit,
+  standardPurity,
+  standardPurityPrice,
+  addVariants = [],
+}) {
   // Basic validation
   if (
     !name || typeof name !== "string" ||
-    typeof price !== "number" ||
-    !image || typeof image !== "string" ||
-    !description || typeof description !== "string"
+    typeof price !== "number"
   ) {
-    throw new Error("Invalid input types");
+    throw new Error("Invalid input: 'name' must be a string and 'price' must be a number");
   }
 
-  const newMetal = {
+  // Validate addVariants (if provided)
+  if (!Array.isArray(addVariants)) {
+    throw new Error("Invalid input: 'addVariants' must be an array");
+  }
+
+
+  for (const variant of addVariants) {
+    if (
+      typeof variant.variantName !== "string" ||
+      typeof variant.purity !== "string" ||
+      typeof variant.price !== "number"
+    ) {
+      throw new Error("Each variant must include 'variantName' (string), 'purity' (string), and 'price' (number)");
+    }
+  }
+
+  const newMetal = new Metal({
     name,
     price,
-    image: image || "/placeholder.svg?height=150&width=150",
-    description
-  };
+    icon,
+    unit,
+    standardPurity,
+    standardPurityPrice,
+    addVariants
+  });
 
   try {
-    const db = await connect(); // Assuming connect is your MongoDB connection function
-    const metalsCollection = db.collection("metals");
-    const result = await metalsCollection.insertOne(newMetal);
-    console.log("✅ Metal uploaded successfully, ID:", result.insertedId);
-    return result;
+    const savedMetal = await newMetal.save();
+    console.log("✅ Metal uploaded successfully, ID:", savedMetal._id);
+    return savedMetal;
   } catch (error) {
     console.error("❌ Error uploading metal:", error.message);
     throw error;
