@@ -13,14 +13,11 @@
 //     ]);
 // });
 
-
 // module.exports = router;
 
 // const express = require("express");
 // const router = express.Router();
 // const productCtrl = require("../Controllers/ProductController");
-
-
 
 // // Product routes
 // router.get("/products", productCtrl.getAllProducts);
@@ -30,21 +27,19 @@
 
 // module.exports = router;
 
-
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const multer = require('multer');
-const { createProduct } = require('../controllers/productController');
+const multer = require("multer");
+const { createProduct } = require("../Controllers/ProductController");
 
 // Upload Config
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
 });
 const upload = multer({ storage });
 
 // @POST /api/products
-router.post('/', upload.single('image'), createProduct);
+router.post("/", upload.single("image"), createProduct);
 
 module.exports = router;
-

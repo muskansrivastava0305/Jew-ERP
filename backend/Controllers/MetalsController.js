@@ -1,6 +1,7 @@
 const Metal = require("../Models/Metal"); // Unified casing
 const { addMetals } = require("../DatabaseFunction/postmetal");
 const { getMetals } = require("../DatabaseFunction/getMetals");
+const { updateMetal } = require("../DatabaseFunction/putMetal");
 // Get all metals
 exports.getAllMetals = async (req, res) => {
   try {
@@ -106,24 +107,42 @@ exports.updateMetalPrice = async (req, res) => {
 // Update metal details
 exports.updateMetal = async (req, res) => {
   try {
-    const { name, icon } = req.body;
+    console.log("incoming req", req.params.id);
+    const { name, unit, standardPurity, standardPurityPrice, image, variants } =
+      req.body;
 
-    const metal = await Metal.findById(req.params.id);
-
-    if (!metal) {
-      return res.status(404).json({ message: "Metal not found" });
+    if (!name) {
+      return res.status(400).json({ message: "Name is required" });
     }
-
-    if (name) metal.name = name;
-    if (icon) metal.icon = icon;
-
-    const updatedMetal = await metal.save();
-    res.status(200).json(updatedMetal);
+    console.log(
+      name,
+      unit,
+      standardPurity,
+      standardPurityPrice,
+      image,
+      variants
+    );
+    let respose = await updateMetal(
+      name,
+      unit,
+      standardPurity,
+      standardPurityPrice,
+      image,
+      variants,
+      req.params.id
+    ).catch((a) => a);
+    console.log(respose, "resosende");
+    if (respose) {
+      //noe we will make aget request agian to db and return the new data
+      this.getAllMetals(req, res);
+    } else {
+      throw new Error("error while adding metal");
+    }
   } catch (error) {
-    console.error(`Error updating metal with ID ${req.params.id}:`, error);
+    console.error("Error creating metal:", error);
     res
       .status(500)
-      .json({ message: "Failed to update metal", error: error.message });
+      .json({ message: "Failed to create metal", error: error.message });
   }
 };
 
