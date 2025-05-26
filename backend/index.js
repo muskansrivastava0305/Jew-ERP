@@ -67,7 +67,7 @@ const app = express();
 // Routers
 const AuthRouter = require("./Routes/AuthRouter");
 const ProductRouter = require("./Routes/ProductRouter");
-const ApiRoutes = require("./Routes/Index"); // Make sure this file exists
+const ApiRoutes = require("./Routes/index"); // Make sure this file exists
 const { connect } = require("./Connections/DatabaseConnection/connection");
 
 // Middleware
