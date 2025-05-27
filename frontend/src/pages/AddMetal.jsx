@@ -1,17 +1,16 @@
 
-import { useState } from "react"
-import { createMetal } from "../api/metalApi"
-import { PlusCircle, X } from "lucide-react"
+import { useState } from "react";
+import { createMetal } from "../api/metalApi";
+
 
 const AddMetalModal = ({ onClose, onAddMetal }) => {
   const [formData, setFormData] = useState({
     name: "",
-    price: "",
+
     unit: "",
     standardPurity: "",
     standardPurityPrice: "",
     image: null,
-    description: "",
   });
   const [variants, setVariants] = useState([
     { name: "", purity: "", price: "" },
@@ -24,87 +23,73 @@ const AddMetalModal = ({ onClose, onAddMetal }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      const formDataToUpload = new FormData();
+      formDataToUpload.append("image", file);
 
-      setFormData({
-        ...formData,
-        image: file,
-      })
-      //code that uploads image to backed cloudnary 
-      //it will retun url http://image.com
-      // Create preview URL
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        //put tthe url here as it will uplad image
-        //Step one first wirte a backend code to get image data and upload it in backend 
-        //for that creat a new route in api named like /upload image the will get the image
-        //then you need to creat a folder that will store the images uploaded 
-        //after which once the image is uplaoded you need to wirte coundnary code to upload that image to cloudanry
-        //after that it will reutrn a url so 
-        //now you need to send that url as res.send("url of image")
-        //now onece we get hte url you need to setPreviewUrl("url value")
-        setPreviewUrl(reader.result)
+      try {
+        const response = await fetch("http://localhost:5000/api/uploadImage", {
+          method: "POST",
+          body: formDataToUpload,
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          console.log(data);
+          setFormData((org) => ({ ...org, image: data.url }));
+          setPreviewUrl(data.url); // this is the Cloudinary URL
+        } else {
+          console.error("Upload failed:", data.error);
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
       }
-      reader.readAsDataURL(file)
-
     }
   };
 
   const handleVariantChange = (index, e) => {
+    const { name, value } = e.target;
     const updated = [...variants];
-    updated[index][e.target.name] = e.target.value;
+
+    // Convert to number if field is 'purity' or 'price'
+    updated[index][name] =
+      name === "purity" || name === "price" ? Number(value) : value;
+
     setVariants(updated);
   };
 
   const addVariant = () => {
-    setVariants([...variants, { name: "", purity: "", price: "" }]);
+    setVariants([...variants, { name: "", purity: 0, price: 0 }]);
   };
-
+  const removeVariant = (indexToRemove) => {
+    setVariants((prev) => prev.filter((_, i) => i !== indexToRemove));
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-
-   
-     
-
       // Create a new metal object
 
-      // const newMetal = {
-      //   name: formData.name,
-      //   price: parseFloat(formData.price),
-      //   unit: formData.unit,
-      //   standardPurity: formData.standardPurity,
-      //   standardPurityPrice: formData.standardPurityPrice,
-      //   image: previewUrl || "/placeholder.svg",
-      //   description: formData.description,
+      const newMetal = {
+        name: formData.name,
+        unit: formData.unit,
+        standardPurity: Number(formData.standardPurity),
+        standardPurityPrice: Number(formData.standardPurityPrice),
+        varients: variants,
+        image:
+          previewUrl || "https://avatars.githubusercontent.com/u/129311377?v=4",
+      };
 
-      // }
-     
-      //  let finalArrayOfMetals =await createMetal(newMetal)
-      // // Add the new metal
-      // onAddMetal(newMetal)
+      let finalArrayOfMetals = await createMetal(newMetal).catch((a) => null);
+      // Add the new metal
+      console.log(finalArrayOfMetals);
+      if (finalArrayOfMetals) {
+        onAddMetal(finalArrayOfMetals);
+      }
 
-      const metalData = {
-  name: formData.name,
-  price: parseFloat(formData.price),
-  unit: formData.unit,
-  standardPurity: formData.standardPurity,
-  standardPurityPrice: formData.standardPurityPrice,
-  image: previewUrl || "/placeholder.svg",
-  description: formData.description,
-  variants: variants, // include all variant entries here
-};
-
-const createdMetal = await createMetal(metalData); // Send full data to backend
-
-onAddMetal(createdMetal); // Use backend response if it returns saved metal
-
-
-      // onAddMetal(newMetal);
       onClose();
     } catch (error) {
       console.error("Error creating metal:", error);
@@ -113,10 +98,11 @@ onAddMetal(createdMetal); // Use backend response if it returns saved metal
     }
   };
 
-  // Harshit chauhan 
+  // Harshit chauhan
 
   return (
-    <div className="fixed inset-0  bg-gray-800/30 backdrop-blur-sm bg-opacity-30 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-opacity-30 flex items-center justify-center z-50">
+
       <div className="bg-gray-100 rounded-lg shadow-xl w-full max-w-2xl">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-medium">Add New Metal</h2>
@@ -124,57 +110,57 @@ onAddMetal(createdMetal); // Use backend response if it returns saved metal
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
           >
-            <X className="w-5 h-5" />
+            {/* <X className="w-5 h-5" /> */}
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div className=" flex flex-col gap-6">
-          <div className="flex items-start space-x-4">
-            <div className="relative w-40 h-30 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center overflow-hidden">
-              {/* Image Preview */}
-              {previewUrl ? (
-                <img
-                  src={previewUrl}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-gray-400 text-sm text-center">
-                  No image
-                </span>
-              )}
-
-              {/* Center Upload Icon */}
-              <label
-                htmlFor="image-upload"
-                className="absolute inset-0 flex items-center justify-center bg-opacity-30 hover:bg-opacity-40 transition duration-200 cursor-pointer"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-black font-extrabold"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v6m0-6l3 3m-3-3l-3 3m3-10v7"
+            <div className="flex items-start space-x-4">
+              <div className="relative w-40 h-30 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center overflow-hidden">
+                {/* Image Preview */}
+                {previewUrl ? (
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
                   />
-                </svg>
-              </label>
+                ) : (
+                  <span className="text-gray-400 text-sm text-center">
+                    No image
+                  </span>
+                )}
 
-              {/* Hidden File Input */}
-              <input
-                type="file"
-                id="image-upload"
-                onChange={handleImageChange}
-                accept="image/*"
-                className="hidden"
-              />
-            </div>
-            
+                {/* Center Upload Icon */}
+                <label
+                  htmlFor="image-upload"
+                  className="absolute inset-0 flex items-center justify-center bg-opacity-30 hover:bg-opacity-40 transition duration-200 cursor-pointer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-black font-extrabold"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v6m0-6l3 3m-3-3l-3 3m3-10v7"
+                    />
+                  </svg>
+                </label>
+
+                {/* Hidden File Input */}
+                <input
+                  type="file"
+                  id="image-upload"
+                  onChange={handleImageChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+              </div>
+
               <div className=" flex flex-col gap-8">
                 <div className=" flex ">
                   <label className="block text-sm font-medium mb-1 w-40 ">
@@ -190,7 +176,9 @@ onAddMetal(createdMetal); // Use backend response if it returns saved metal
                   />
                 </div>
                 <div className="flex">
-                  <label className="block text-sm font-medium mb-1 w-40">Unit</label>
+                  <label className="block text-sm font-medium mb-1 w-40">
+                    Unit
+                  </label>
                   <select
                     name="unit"
                     value={formData.unit}
@@ -204,35 +192,34 @@ onAddMetal(createdMetal); // Use backend response if it returns saved metal
                   </select>
                 </div>
               </div>
-               </div>
+            </div>
 
-              <div className=" flex ">
-                <div className="flex ">
-                  <label className="block text-sm font-medium mb-1 w-60">
-                    Standard purity %
-                  </label>
-                  <input
-                    type="number"
-                    name="standardPurity"
-                    value={formData.standardPurity}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
-                <div className=" flex ">
-                  <label className="block text-sm font-medium mb-1">
-                    Standard purity price
-                  </label>
-                  <input
-                    type="number"
-                    name="standardPurityPrice"
-                    value={formData.standardPurityPrice}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
+            <div className=" flex ">
+              <div className="flex ">
+                <label className="block text-sm font-medium mb-1 w-60">
+                  Standard purity %
+                </label>
+                <input
+                  type="number"
+                  name="standardPurity"
+                  value={formData.standardPurity}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
               </div>
-           
+              <div className=" flex ">
+                <label className="block text-sm font-medium mb-1">
+                  Standard purity price
+                </label>
+                <input
+                  type="number"
+                  name="standardPurityPrice"
+                  value={formData.standardPurityPrice}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              </div>
+            </div>
           </div>
 
           <div>
@@ -241,7 +228,10 @@ onAddMetal(createdMetal); // Use backend response if it returns saved metal
             </label>
             <div className="space-y-2">
               {variants.map((variant, index) => (
-                <div key={index} className="grid grid-cols-3 gap-2">
+                <div
+                  key={index}
+                  className="grid grid-cols-4 gap-2 items-center"
+                >
                   <input
                     type="text"
                     name="name"
@@ -258,22 +248,35 @@ onAddMetal(createdMetal); // Use backend response if it returns saved metal
                     placeholder="Purity %"
                     className="px-3 py-2 border rounded-md"
                   />
-                  <input
-                    type="number"
-                    name="price"
-                    value={variant.price}
-                    onChange={(e) => handleVariantChange(index, e)}
-                    placeholder="Price"
-                    className="px-3 py-2 border rounded-md"
-                  />
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="number"
+                      name="price"
+                      value={variant.price}
+                      onChange={(e) => handleVariantChange(index, e)}
+                      placeholder="Price"
+                      className="px-3 py-2 border rounded-md"
+                    />
+                    {variants.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeVariant(index)}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                      >
+                        🗑
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
+
               <button
                 type="button"
                 onClick={addVariant}
                 className="flex items-center text-sm text-green-700 hover:text-green-900"
               >
-                <PlusCircle className="w-5 h-5 mr-1" /> Add variant
+                {/* <PlusCircle className="w-5 h-5 mr-1" /> Add variant */}
+                Add Variant
               </button>
             </div>
           </div>
@@ -302,7 +305,7 @@ onAddMetal(createdMetal); // Use backend response if it returns saved metal
 
 export default AddMetalModal;
 
-// "use client"
+
 
 // import { useState } from "react"
 

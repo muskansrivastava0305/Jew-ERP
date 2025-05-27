@@ -1,32 +1,34 @@
-const { connect } = require('../Connections/connection');
+const { connect } = require("../Connections/DatabaseConnection/connection");
 
-async function addMetals(name, price, image, description) {
+async function addMetals(
+  name,
+  unit,
+  standardPurity,
+  standardPurityPrice,
+  image,
+  variants
+) {
   // Basic validation
-  if (
-    !name || typeof name !== "string" ||
-    typeof price !== "number" ||
-    !image || typeof image !== "string" ||
-    !description || typeof description !== "string"
-  ) {
-    throw new Error("Invalid input types");
-  }
-
+  //Do it yourself
   const newMetal = {
     name,
-    price,
-    image: image || "/placeholder.svg?height=150&width=150",
-    description
+    unit,
+    standardPurity,
+    standardPurityPrice,
+    image,
+    variants,
+    createdAt: new Date(),
   };
 
   try {
-    const db = await connect(); // Assuming connect is your MongoDB connection function
+    const db = await connect();
     const metalsCollection = db.collection("metals");
     const result = await metalsCollection.insertOne(newMetal);
     console.log("✅ Metal uploaded successfully, ID:", result.insertedId);
-    return result;
+    return true;
   } catch (error) {
     console.error("❌ Error uploading metal:", error.message);
-    throw error;
+    return false;
   }
 }
 

@@ -1,11 +1,16 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { FiUpload } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 
 const MetalEditModal = ({ metal, onClose, onSave }) => {
+  useEffect(() => {
+    console.log(metal, "data");
+  });
   const [formData, setFormData] = useState({
     name: metal.name,
-    price: metal.price,
+
+    standardPurityPrice: metal.standardPurityPrice,
     unit: metal.unit,
     standardPurity: metal.standardPurity,
     variants: metal.variants || [],
@@ -14,7 +19,8 @@ const MetalEditModal = ({ metal, onClose, onSave }) => {
 
   const handleVariantChange = (index, field, value) => {
     const updatedVariants = [...formData.variants];
-    updatedVariants[index][field] = field === "price" || field === "purity" ? parseFloat(value) : value;
+    updatedVariants[index][field] =
+      field === "price" || field === "purity" ? parseFloat(value) : value;
     setFormData({ ...formData, variants: updatedVariants });
   };
 
@@ -43,6 +49,7 @@ const MetalEditModal = ({ metal, onClose, onSave }) => {
   };
 
   const handleSave = async () => {
+    console.log(formData);
     try {
       const res = await fetch(`/api/metals/${metal._id}`, {
         method: "PUT",
@@ -72,84 +79,102 @@ const MetalEditModal = ({ metal, onClose, onSave }) => {
           &times;
         </button>
 
-<div className="">
-        <div className="grid grid-cols-1 md:grid-cols-3 mt-8">
-         <div className="flex flex-col items-center justify-center rounded-lg relative w-35 h-35 bg-gray-100 overflow-hidden">
-  {/* Upload Label Centered */}
-  <label
-    htmlFor="imageUpload"
-    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+        <div className="">
+          <div className="grid grid-cols-1 md:grid-cols-3 mt-8">
+            <div className="flex flex-col items-center justify-center rounded-lg relative w-35 h-35 bg-gray-100 overflow-hidden">
+              {/* Upload Label Centered */}
+              <label
+                htmlFor="imageUpload"
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
                flex items-center gap-1 bg-[#4C5C1A] text-white px-3 py-1 rounded-md cursor-pointer"
-  >
-    <FiUpload size={18} />
-    <span>Upload</span>
-  </label>
+              >
+                <FiUpload size={18} />
+                <span>Upload</span>
+              </label>
 
-  {/* Hidden File Input */}
-  <input
-    id="imageUpload"
-    type="file"
-    accept="image/*"
-    className="hidden"
-    onChange={handleImageChange}
-  />
+              {/* Hidden File Input */}
+              <input
+                id="imageUpload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageChange}
+              />
 
-  {/* Image Preview */}
-  {formData.image && (
-    <img
-      src={formData.image}
-      alt="metal"
-      className="w-full h-full object-cover"
-    />
-  )}
-</div>
-
-
-          <div className="md:col-span-2 gap-3">
-            <div className="flex flex-col gap-10 ">
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium w-40">Metal's name</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className=" bg-gray-100 rounded px-3 py-2 w-full"
+              {/* Image Preview */}
+              {formData.image && (
+                <img
+                  src={formData.image}
+                  alt="metal"
+                  className="w-full h-full object-cover"
                 />
-              </div>
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium w-40">Unit</label>
-                <input
-                  type="text"
-                  value={formData.unit}
-                  onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-                  className=" bg-gray-100 rounded px-3 py-2 w-full"
-                />
-              </div>
+              )}
             </div>
 
+            <div className="md:col-span-2 gap-3">
+              <div className="flex flex-col gap-10 ">
+                <div className="flex items-center gap-2">
+                  <label className="text-sm font-medium w-40">
+                    Metal's name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    className=" bg-gray-100 rounded px-3 py-2 w-full"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm font-medium w-40">Unit</label>
+                  <input
+                    type="text"
+                    value={formData.unit}
+                    onChange={(e) =>
+                      setFormData({ ...formData, unit: e.target.value })
+                    }
+                    className=" bg-gray-100 rounded px-3 py-2 w-full"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-         <div className="flex flex-row mt-4 gap-3 ">
-              <div className=" flex">
-                <label className="text-sm flex items-center font-medium w-full ">Standard purity %</label>
-                <input
-                  type="number"
-                  value={formData.standardPurity}
-                  onChange={(e) => setFormData({ ...formData, standardPurity: parseFloat(e.target.value) })}
-                  className=" bg-gray-100 rounded w-full px-3 py-2"
-                />
-              </div>
-              <div className="flex gap-3"> 
-                <label className="text-sm flex items-center font-medium w-full">Standard purity price</label>
-                <input
-                  type="number"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
-                  className=" bg-gray-100 rounded px-2 py-2"
-                />
-              </div>
+          <div className="flex flex-row mt-4 gap-3 ">
+            <div className=" flex">
+              <label className="text-sm flex items-center font-medium w-full ">
+                Standard purity %
+              </label>
+              <input
+                type="number"
+                value={formData.standardPurity}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    standardPurity: parseFloat(e.target.value),
+                  })
+                }
+                className=" bg-gray-100 rounded w-full px-3 py-2"
+              />
             </div>
+            <div className="flex gap-3">
+              <label className="text-sm flex items-center font-medium w-full">
+                Standard purity price
+              </label>
+              <input
+                type="number"
+                value={formData.price}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    price: parseFloat(e.target.value),
+                  })
+                }
+                className=" bg-gray-100 rounded px-2 py-2"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="mt-6">
@@ -168,7 +193,6 @@ const MetalEditModal = ({ metal, onClose, onSave }) => {
                 <th className="p-2 text-left">Name</th>
                 <th className="p-2 text-left">Purity</th>
                 <th className="p-2 text-left">Price</th>
-                
               </tr>
             </thead>
             <tbody>
@@ -177,7 +201,9 @@ const MetalEditModal = ({ metal, onClose, onSave }) => {
                   <td className=" p-1">
                     <input
                       value={variant.name}
-                      onChange={(e) => handleVariantChange(index, "name", e.target.value)}
+                      onChange={(e) =>
+                        handleVariantChange(index, "name", e.target.value)
+                      }
                       className="w-full bg-gray-100 px-2 py-1 rounded"
                     />
                   </td>
@@ -185,7 +211,9 @@ const MetalEditModal = ({ metal, onClose, onSave }) => {
                     <input
                       type="number"
                       value={variant.purity}
-                      onChange={(e) => handleVariantChange(index, "purity", e.target.value)}
+                      onChange={(e) =>
+                        handleVariantChange(index, "purity", e.target.value)
+                      }
                       className="w-full bg-gray-100 px-2 py-1 rounded"
                     />
                   </td>
@@ -193,12 +221,17 @@ const MetalEditModal = ({ metal, onClose, onSave }) => {
                     <input
                       type="number"
                       value={variant.price}
-                      onChange={(e) => handleVariantChange(index, "price", e.target.value)}
+                      onChange={(e) =>
+                        handleVariantChange(index, "price", e.target.value)
+                      }
                       className="w-full bg-gray-100 px-2 py-1 rounded"
                     />
                   </td>
                   <td className="p-2 text-center">
-                    <button onClick={() => handleDeleteVariant(index)} className="text-red-600 hover:text-red-800">
+                    <button
+                      onClick={() => handleDeleteVariant(index)}
+                      className="text-red-600 hover:text-red-800"
+                    >
                       <MdDelete size={18} />
                     </button>
                   </td>
